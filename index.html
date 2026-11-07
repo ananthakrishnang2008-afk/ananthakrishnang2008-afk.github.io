@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anantha Krishnan G</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Hanken+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: night-island scroll. One column, name emerges from fog in the hero,
+     sections fade in as they are reached. */
+  :root {
+    --night: #061418;
+    --deep: #0b2229;
+    --jungle: #16382f;
+    --sand: #e8dcc0;
+    --mist: #9fb3ab;
+    --glow: #62d6c4;
+    --ember: #e3a857;
+    --line: rgba(232, 220, 192, 0.16);
+    --card: rgba(11, 34, 41, 0.66);
+    --f-display: 'Cinzel', 'Trajan Pro', Georgia, serif;
+    --f-body: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --f-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    color-scheme: dark;
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--night);
+    color: var(--sand);
+    font: 400 1rem/1.65 var(--f-body);
+    padding-block: 0;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    overflow-x: clip;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  a { color: var(--glow); text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; }
+  ::selection { background: var(--glow); color: var(--night); }
+
+  /* ---------- fixed atmosphere ---------- */
+  .bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .bg .sea {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(120% 55% at 50% 112%, rgba(98, 214, 196, 0.20), transparent 62%),
+      radial-gradient(80% 50% at 15% 0%, rgba(22, 56, 47, 0.75), transparent 70%),
+      linear-gradient(180deg, #061418 0%, #08202a 55%, #0a2a30 100%);
+  }
+  .bg .fog {
+    position: absolute; left: -30%; width: 160%; height: 38%;
+    background: radial-gradient(50% 50% at 50% 50%, rgba(232, 220, 192, 0.07), transparent 70%);
+    filter: blur(30px);
+    animation: drift 48s ease-in-out infinite alternate;
+  }
+  .bg .fog.f1 { top: 8%; }
+  .bg .fog.f2 { top: 52%; animation-duration: 62s; animation-direction: alternate-reverse; opacity: 0.8; }
+  @keyframes drift { from { transform: translateX(-8%); } to { transform: translateX(8%); } }
+
+  main { position: relative; z-index: 2; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+
+  /* ---------- hero ---------- */
+  .hero { position: relative; padding-block: clamp(64px, 15vh, 150px) clamp(48px, 9vh, 96px); }
+  .hero-in { position: relative; z-index: 1; }
+  .mono { font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mist); }
+  .hero .mono { animation: fade-up 1.2s ease both; }
+  .hero .mono.top { animation-delay: 0.1s; margin: 0 0 26px; }
+  .hero .mono.top b { color: var(--glow); font-weight: 500; }
+
+  h1.name {
+    margin: 0;
+    font-family: var(--f-display); font-weight: 700;
+    font-size: clamp(2.35rem, 10.4vw, 6.1rem); line-height: 1.02; letter-spacing: 0.05em;
+    text-wrap: balance; color: var(--sand);
+    text-shadow: 0 0 38px rgba(98, 214, 196, 0.22);
+    display: flex; flex-wrap: wrap; column-gap: 0.32em; row-gap: 0.04em;
+  }
+  h1.name .nm-word { display: inline-block; white-space: nowrap; }
+  h1.name .nm-word.init { color: var(--glow); }
+  .split .ch {
+    display: inline-block; opacity: 0; filter: blur(14px);
+    transform: translateY(0.28em) scale(1.08);
+    animation: emerge 1.4s cubic-bezier(.2, .7, .2, 1) forwards;
+    animation-delay: calc(0.4s + var(--i) * 70ms);
+  }
+  @keyframes emerge { to { opacity: 1; filter: blur(0); transform: none; } }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+  .role { margin: 26px 0 0; font-family: var(--f-display); font-weight: 500; font-size: clamp(1rem, 3.2vw, 1.4rem); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ember); animation: fade-up 1.2s 2.2s ease both; }
+  .hero .sub { margin: 14px 0 0; max-width: 46ch; color: var(--mist); font-size: 1.05rem; animation: fade-up 1.2s 2.5s ease both; }
+  .hero .mono.cue { margin: 44px 0 0; animation-delay: 2.9s; }
+
+  /* ---------- sections ---------- */
+  section { padding-block: clamp(52px, 9vw, 104px); border-top: 1px solid var(--line); }
+  .sh { margin-bottom: 34px; }
+  .sh .mono { margin: 0 0 10px; display: block; }
+  h2 {
+    margin: 0; font-family: var(--f-display); font-weight: 700;
+    font-size: clamp(1.7rem, 5.4vw, 2.7rem); letter-spacing: 0.06em; line-height: 1.12; text-wrap: balance;
+  }
+
+  .js .rv { opacity: 0.25; transform: translateY(26px); filter: blur(4px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(.2, .7, .2, 1), filter 0.9s ease; transition-delay: var(--d, 0s); }
+  .js .rv.in { opacity: 1; transform: none; filter: none; }
+
+  /* about */
+  .about { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .about p { margin: 0 0 1.1em; max-width: 62ch; font-size: 1.08rem; }
+  .about p:last-child { margin-bottom: 0; }
+  .glance { margin: 0; padding: 22px 22px 6px; border: 1px solid var(--line); background: var(--card); backdrop-filter: blur(6px); border-radius: 4px; }
+  .glance div { padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .glance div:last-child { border-bottom: 0; }
+  .glance dt { font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--mist); }
+  .glance dd { margin: 3px 0 0; font-weight: 500; }
+
+  /* timeline */
+  .tl { list-style: none; margin: 0; padding: 0 0 0 40px; position: relative; display: grid; gap: 38px; }
+  .tl::before { content: ""; position: absolute; left: 11px; top: 10px; bottom: 10px; width: 1px; background: linear-gradient(180deg, var(--line), var(--glow)); }
+  .tl li { position: relative; }
+  .tl li::before {
+    content: ""; position: absolute; left: -40px; top: 4px; width: 23px; height: 23px; border-radius: 50%;
+    border: 1px solid var(--glow);
+    background: radial-gradient(circle, var(--glow) 0 3px, var(--night) 3.5px 7px, transparent 7.5px), var(--night);
+  }
+  .tl li.now::after {
+    content: ""; position: absolute; left: -40px; top: 4px; width: 23px; height: 23px; border-radius: 50%;
+    border: 1px solid var(--glow); animation: ping 2.6s ease-out infinite;
+  }
+  @keyframes ping { from { transform: scale(1); opacity: 0.7; } to { transform: scale(2.3); opacity: 0; } }
+  .tl .when { font-family: var(--f-mono); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--ember); }
+  .tl h3 { margin: 4px 0 4px; font-family: var(--f-display); font-weight: 700; font-size: clamp(1.08rem, 3.4vw, 1.4rem); letter-spacing: 0.04em; line-height: 1.25; }
+  .tl .where { margin: 0; color: var(--mist); max-width: 60ch; }
+  .tl .row { display: flex; flex-wrap: wrap; gap: 8px 22px; align-items: baseline; justify-content: space-between; }
+  .tl .score { font-family: var(--f-display); font-weight: 700; font-size: 1.5rem; color: var(--sand); font-variant-numeric: tabular-nums; }
+  .tl .score small { font-family: var(--f-mono); font-weight: 400; font-size: 0.68rem; letter-spacing: 0.14em; color: var(--mist); margin-left: 8px; }
+
+  /* skills */
+  .skills { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr)); gap: 18px; }
+  .group { border: 1px solid var(--line); background: var(--card); backdrop-filter: blur(6px); border-radius: 4px; padding: 22px 22px 10px; min-width: 0; }
+  .group h3 { margin: 0 0 8px; font-family: var(--f-mono); font-weight: 500; font-size: 0.74rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--glow); }
+  .group ul { list-style: none; margin: 0; padding: 0; }
+  .group li { padding: 14px 0; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+  .group li strong { font-weight: 600; font-size: 1.05rem; }
+  .group li span { color: var(--mist); font-size: 0.93rem; }
+  .tag { justify-self: start; font-family: var(--f-mono); font-size: 0.64rem; letter-spacing: 0.14em; text-transform: uppercase; padding: 2px 8px; border: 1px solid var(--line); border-radius: 2px; color: var(--ember); }
+
+  /* contact */
+  .contact-lead { margin: 0 0 30px; max-width: 54ch; font-size: 1.08rem; }
+  .ct { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .ct li { display: grid; grid-template-columns: 110px minmax(0, 1fr) auto; gap: 8px 16px; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .ct .mono { font-size: 0.7rem; }
+  .ct .val { font-size: 1.1rem; font-weight: 500; overflow-wrap: anywhere; user-select: all; }
+  .ct a.val { user-select: auto; }
+  .btn {
+    font-family: var(--f-mono); font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--sand); background: transparent; border: 1px solid var(--line); border-radius: 2px;
+    padding: 8px 12px; cursor: pointer; text-decoration: none; display: inline-block; min-width: 76px; text-align: center;
+  }
+  .btn:hover { border-color: var(--glow); color: var(--glow); }
+
+  footer { padding-block: 32px 40px; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+  @media (max-width: 720px) {
+    .about { grid-template-columns: minmax(0, 1fr); }
+    .ct li { grid-template-columns: minmax(0, 1fr) auto; }
+    .ct li > .mono { grid-column: 1 / -1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .js .rv { opacity: 1; transform: none; filter: none; transition: none; }
+    .split .ch { animation: none; opacity: 1; filter: none; transform: none; }
+    .bg .fog, .tl li.now::after { animation: none; }
+    .hero .mono, .role, .hero .sub { animation: none; }
+  }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<div class="bg" aria-hidden="true"><div class="sea"></div><div class="fog f1"></div><div class="fog f2"></div></div>
+
+<main>
+  <div class="wrap">
+
+    <header class="hero">
+      <div class="hero-in">
+        <p class="mono top">Signal acquired &middot; <b>8.5241&deg; N, 76.9366&deg; E</b></p>
+        <h1 class="name" id="name" aria-label="Anantha Krishnan G">
+          <span class="nm-word">ANANTHA</span>
+          <span class="nm-word">KRISHNAN</span>
+          <span class="nm-word init">G</span>
+        </h1>
+        <p class="role">Electronics &amp; Communication Engineering</p>
+        <p class="sub">First-year B.Tech student at KTU, Thiruvananthapuram. Learning by building, and quick to pick up what comes next.</p>
+        <p class="mono cue">Year 1 of 4 &middot; Scroll down</p>
+      </div>
+    </header>
+
+    <section id="about">
+      <div class="sh rv"><span class="mono">About</span><h2>About Me</h2></div>
+      <div class="about">
+        <div class="rv" style="--d:.1s">
+          <p>I'm a first-year Electronics and Communication Engineering student at Mohan College of Engineering and Technology, Thiruvananthapuram, studying under APJ Abdul Kalam Technological University (KTU).</p>
+          <p>Technology and electronics pull me in, and I learn best through practical work. I pick up new skills quickly, enjoy solving problems, and work well in a team.</p>
+          <p>Right now I'm looking to gain hands-on experience, sharpen my technical skills, and build a career one solid step at a time.</p>
+        </div>
+        <dl class="glance rv" style="--d:.25s">
+          <div><dt>Based in</dt><dd>Thiruvananthapuram, Kerala</dd></div>
+          <div><dt>Programme</dt><dd>B.Tech, Electronics &amp; Communication</dd></div>
+          <div><dt>Batch</dt><dd>2026 &ndash; 2030, Semester 1</dd></div>
+          <div><dt>University</dt><dd>APJ Abdul Kalam Technological University</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="education">
+      <div class="sh rv"><span class="mono">Education &middot; 2024 to 2030</span><h2>Education Timeline</h2></div>
+      <ol class="tl">
+        <li class="rv">
+          <div class="when">2024</div>
+          <div class="row">
+            <div>
+              <h3>Secondary, Class X (CBSE)</h3>
+              <p class="where">Amrita Kairali Vidya Bhavan, Nedumangad, Thiruvananthapuram</p>
+            </div>
+            <div class="score">86%<small>CBSE</small></div>
+          </div>
+        </li>
+        <li class="rv" style="--d:.08s">
+          <div class="when">2026</div>
+          <div class="row">
+            <div>
+              <h3>Senior Secondary, Class XII (CBSE)</h3>
+              <p class="where">Biomaths &middot; Amrita Kairali Vidya Bhavan, Nedumangad, Thiruvananthapuram</p>
+            </div>
+            <div class="score">77%<small>CBSE</small></div>
+          </div>
+        </li>
+        <li class="rv now" style="--d:.16s">
+          <div class="when">2026 &ndash; 2030 &middot; IN PROGRESS</div>
+          <h3>B.Tech, Electronics &amp; Communication Engineering</h3>
+          <p class="where">Mohan College of Engineering and Technology, Thiruvananthapuram &middot; APJ Abdul Kalam Technological University (KTU)</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="skills">
+      <div class="sh rv"><span class="mono">Skills &middot; as of semester 1</span><h2>Technical Skills</h2></div>
+      <div class="skills">
+        <div class="group rv">
+          <h3>Programming</h3>
+          <ul>
+            <li><strong>Python</strong><span>Introductory course, building the basics</span><em class="tag">Learning</em></li>
+          </ul>
+        </div>
+        <div class="group rv" style="--d:.1s">
+          <h3>Engineering core</h3>
+          <ul>
+            <li><strong>Electronics &amp; Communication</strong><span>B.Tech ECE coursework at KTU</span><em class="tag">Studying</em></li>
+            <li><strong>Engineering Graphics</strong><span>Semester 1 course</span><em class="tag">Studying</em></li>
+            <li><strong>Engineering Chemistry</strong><span>Materials for electronic applications</span><em class="tag">Studying</em></li>
+          </ul>
+        </div>
+        <div class="group rv" style="--d:.2s">
+          <h3>Working style</h3>
+          <ul>
+            <li><strong>Quick learner</strong><span>Picks up new skills fast</span></li>
+            <li><strong>Problem solving</strong><span>Likes working a problem through</span></li>
+            <li><strong>Teamwork</strong><span>Works well with others</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="sh rv"><span class="mono">Contact</span><h2>Contact</h2></div>
+      <p class="contact-lead rv">Open to internships, projects and team work while I build practical experience. Write or call.</p>
+      <ul class="ct rv" style="--d:.1s">
+        <li><span class="mono">Email</span><span class="val" id="v-email">ananthakrishnang2008@gmail.com</span><button class="btn" type="button" data-copy="v-email">Copy</button></li>
+        <li><span class="mono">Phone</span><span class="val" id="v-phone">9656761708</span><button class="btn" type="button" data-copy="v-phone">Copy</button></li>
+        <li><span class="mono">LinkedIn</span><a class="val" id="v-in" href="https://www.linkedin.com/in/ananthakrishnan-g-b1b70341a" target="_blank" rel="noopener">linkedin.com/in/ananthakrishnan-g-b1b70341a</a><a class="btn" href="https://www.linkedin.com/in/ananthakrishnan-g-b1b70341a" target="_blank" rel="noopener">Open</a></li>
+        <li><span class="mono">Location</span><span class="val">Thiruvananthapuram, Kerala</span><span></span></li>
+      </ul>
+    </section>
+
+    <footer>
+      <span class="mono">Anantha Krishnan G &middot; 2026</span>
+      <span class="mono">8.5241&deg; N, 76.9366&deg; E</span>
+    </footer>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ----- name: split into letters that emerge from the fog ----- */
+  var name = document.getElementById('name');
+  if (name && !reduce) {
+    var idx = 0;
+    name.querySelectorAll('.nm-word').forEach(function (w) {
+      var text = w.textContent; w.textContent = '';
+      text.split('').forEach(function (c) {
+        var s = document.createElement('span');
+        s.className = 'ch'; s.setAttribute('aria-hidden', 'true');
+        s.style.setProperty('--i', idx++); s.textContent = c; w.appendChild(s);
+      });
+    });
+    name.classList.add('split');
+  }
+
+  /* ----- scroll reveal ----- */
+  var items = document.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.18, rootMargin: '0px 0px -6% 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  /* ----- copy buttons ----- */
+  function flash(btn, text) {
+    var old = btn.textContent; btn.textContent = text;
+    setTimeout(function () { btn.textContent = old; }, 1500);
+  }
+  document.querySelectorAll('[data-copy]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var el = document.getElementById(btn.getAttribute('data-copy'));
+      var text = el.textContent.trim();
+      function fallback() {
+        var r = document.createRange(); r.selectNodeContents(el);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        flash(btn, 'Selected');
+      }
+      try {
+        navigator.clipboard.writeText(text).then(function () { flash(btn, 'Copied'); }, fallback);
+      } catch (e) { fallback(); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
